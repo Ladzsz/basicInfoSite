@@ -1,0 +1,27 @@
+.fancy-pancake {
+  display: block;
+  width: 90vw;
+  max-width: 600px;
+  height: auto;
+  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (min-width: 600px) {
+  .fancy-pancake {
+    width: 70vw;
+  }
+}
+@media (min-width: 1000px) {
+  .fancy-pancake {
+    width: 50vw;
+  }
+}
+
+
+.fancy-pancake:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
