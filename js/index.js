@@ -14,13 +14,13 @@ const server = http.createServer((req, res) => {
     let filePath = '';
 
     if (req.url === '/' || req.url === '/index.html') {
-        filePath = path.join(__dirname, 'index.html');
+        filePath = path.join(__dirname, '../html/index.html');
     } else if (req.url === '/about') {
-        filePath = path.join(__dirname, 'about.html');
+        filePath = path.join(__dirname, '../html/about.html');
     } else if (req.url === '/contact-me') {
-        filePath = path.join(__dirname, 'contact-me.html');
+        filePath = path.join(__dirname, '../html/contact-me.html');
     } else {
-        filePath = path.join(__dirname, '404.html');
+        filePath = path.join(__dirname, '../html/404.html');
     }
 
     //reading the file and sending the html response
