@@ -1,0 +1,41 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE / editor settings
+.vscode/
+.idea/
+
+# Build outputs (if you ever build your project)
+dist/
+build/
+
+# Optional: npm / package manager lock files (if you want)
+# package-lock.json
+# yarn.lock
+
+# Temporary files
+*.tmp
+*.temp
+
+# Mac specific
+*.DS_Store
+
+# Linux swap files
+*~
+
+# Optional coverage folders
+coverage/

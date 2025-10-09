@@ -1,76 +1,71 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const EventEmitter = require('events');
-const emailEmitter = new EventEmitter();
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
 
-const hostname = 'localhost';
-const port = 8080;
+const app = express();
+const PORT = 8080;
 
-const server = http.createServer((req, res) => {
-    console.log(`Request for ${req.url}`);
+// Fix for ES module __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-    // Default content type
-    let contentType = 'text/html';
-    let filePath = '';
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../'))); 
 
-    // 🔹 Handle static assets
-    if (req.url.match(/^\/styles\//)) {
-        // CSS files
-        filePath = path.join(__dirname, '..', req.url);
-        contentType = 'text/css';
-    } else if (req.url.match(/^\/media\//)) {
-        // Images (including .webp)
-        filePath = path.join(__dirname, '..', req.url);
-        const ext = path.extname(filePath);
-        switch (ext) {
-            case '.jpg':
-            case '.jpeg':
-                contentType = 'image/jpeg';
-                break;
-            case '.png':
-                contentType = 'image/png';
-                break;
-            case '.gif':
-                contentType = 'image/gif';
-                break;
-            case '.svg':
-                contentType = 'image/svg+xml';
-                break;
-            case '.webp':
-                contentType = 'image/webp';
-                break;
-            default:
-                contentType = 'application/octet-stream';
-        }
-    } else if (req.url === '/' || req.url === '/index.html') {
-        filePath = path.join(__dirname, '../html/index.html');
-    } else if (req.url === '/about') {
-        filePath = path.join(__dirname, '../html/about.html');
-    } else if (req.url === '/contact-me') {
-        filePath = path.join(__dirname, '../html/contact-me.html');
-    } else {
-        filePath = path.join(__dirname, '../html/404.html');
-    }
-
-    // 🔹 Read and serve the file
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            console.error(`Error reading file: ${filePath}`);
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'text/plain');
-            res.end('Server Error');
-        } else {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', contentType);
-            res.end(data);
-        }
-    });
-
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS 
+  }
 });
 
+// Serve HTML pages
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/index.html'));
+});
 
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/about.html'));
+});
 
-server.listen(port, hostname, () => {
-    console.log(`✅ Server running at http://${hostname}:${port}/`);
+app.get('/contact-me', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/contact-me.html'));
+});
+
+// email form POST
+app.post('/contact-me', async (req, res) => {
+  console.log('✅ Received contact form:', req.body);
+
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ success: false, error: 'All fields are required' });
+  }
+
+  try {
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,  
+      to: process.env.GMAIL_USER,    
+      subject: `New contact from ${name}`,
+      text: `From: ${name} <${email}>\n\n${message}`,
+      replyTo: email
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error sending email:', err);
+    res.status(500).json({ success: false, error: 'Email failed to send' });
+  }
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`✅ Server running at http://localhost:${PORT}/`);
 });

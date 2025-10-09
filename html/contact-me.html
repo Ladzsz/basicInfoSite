@@ -35,5 +35,41 @@
     </main>
 
     <footer>Rights reserved blah blah</footer>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+
+        // Get form data
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        try {
+            // Send data to backend
+            const response = await fetch('http://localhost:8080/contact-me', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+            alert('✅ Message sent successfully!');
+            e.target.reset(); // clear the form
+            } else {
+            alert('❌ Something went wrong: ' + (result.error || 'Unknown error'));
+            }
+        } catch (err) {
+            console.error(err);
+            alert('⚠️ Error sending message. Check your internet connection or try again later.');
+        }
+
+        console.log('Sending:', { name, email, message });
+
+        });
+</script>
+
 </body>
 </html>
