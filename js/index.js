@@ -39,6 +39,10 @@ app.get('/contact-me', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/contact-me.html'));
 });
 
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, '../html/404.html'));
+});
+
 // email form POST
 app.post('/contact-me', async (req, res) => {
   console.log('✅ Received contact form:', req.body);
