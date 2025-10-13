@@ -31,7 +31,7 @@
 
                 <button id="submitBtn" type="submit">Send Message</button>
 
-                <p id="loadText" style="display: none;">Sending Email...</p>
+                <p id="loadText" style="display: none;">Sending</p>
             </form>
         </div>
     </main>
@@ -52,6 +52,13 @@
         loadingtext.style.display = "block";
         subBtn.style.display = "none";
 
+        // Animate dots
+        let dots = 0;
+        const interval = setInterval(() => {
+            dots = (dots + 1) % 4;
+            loadingtext.textContent = 'Sending' + '.'.repeat(dots);
+        }, 500);
+
         try {
             // Send data to backend
             const response = await fetch('http://localhost:8080/contact-me', {
@@ -61,8 +68,6 @@
             });
 
             const result = await response.json();
-
-            subBtn.style.display = "block";
 
             if (result.success) {
             alert('✅ Message sent successfully!');
@@ -75,6 +80,7 @@
             alert('⚠️ Error sending message. Check your internet connection or try again later.');
         } finally {
             // Hide loading text and show submit button again
+            clearInterval(interval);
             loadingtext.style.display = "none";
             subBtn.style.display = "block";
         }

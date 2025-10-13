@@ -39,10 +39,6 @@ app.get('/contact-me', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/contact-me.html'));
 });
 
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '../html/404.html'));
-});
-
 // email form POST
 app.post('/contact-me', async (req, res) => {
 
@@ -62,6 +58,10 @@ app.post('/contact-me', async (req, res) => {
     console.error('Error sending email:', err);
     res.status(500).json({ success: false, error: 'Email failed to send' });
   }
+});
+
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, '../html/404.html'));
 });
 
 // Start server
