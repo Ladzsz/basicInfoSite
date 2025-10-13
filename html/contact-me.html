@@ -29,7 +29,9 @@
                 <label for="message">Message:</label>
                 <textarea id="message" name="message" rows="5" placeholder="Write your message..." required></textarea>
 
-                <button type="submit">Send Message</button>
+                <button id="submitBtn" type="submit">Send Message</button>
+
+                <p id="loadText" style="display: none;">Sending Email...</p>
             </form>
         </div>
     </main>
@@ -44,6 +46,11 @@
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
         const message = document.getElementById('message').value.trim();
+        const loadingtext = document.getElementById('loadText');
+        const subBtn = document.getElementById('submitBtn');
+
+        loadingtext.style.display = "block";
+        subBtn.style.display = "none";
 
         try {
             // Send data to backend
@@ -55,6 +62,8 @@
 
             const result = await response.json();
 
+            subBtn.style.display = "block";
+
             if (result.success) {
             alert('✅ Message sent successfully!');
             e.target.reset(); // clear the form
@@ -64,11 +73,13 @@
         } catch (err) {
             console.error(err);
             alert('⚠️ Error sending message. Check your internet connection or try again later.');
+        } finally {
+            // Hide loading text and show submit button again
+            loadingtext.style.display = "none";
+            subBtn.style.display = "block";
         }
 
-        console.log('Sending:', { name, email, message });
-
-        });
+    });
 </script>
 
 </body>

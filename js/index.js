@@ -45,13 +45,8 @@ app.use((req, res) => {
 
 // email form POST
 app.post('/contact-me', async (req, res) => {
-  console.log('✅ Received contact form:', req.body);
 
   const { name, email, message } = req.body;
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ success: false, error: 'All fields are required' });
-  }
 
   try {
     await transporter.sendMail({
