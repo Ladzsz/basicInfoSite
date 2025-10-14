@@ -28,7 +28,7 @@ const transporter = nodemailer.createTransport({
 
 // Serve HTML pages
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../html/index.html'));
+  res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 app.get('/about', (req, res) => {
@@ -60,9 +60,7 @@ app.post('/contact-me', async (req, res) => {
   }
 });
 
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '../html/404.html'));
-});
+
 
 // Start server
 app.listen(PORT, () => {
