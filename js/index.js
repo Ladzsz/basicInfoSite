@@ -14,10 +14,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Middleware
-app.use(cors( {
-  origin: 'https://basicinfosite.netlify.app'
-}));
 app.use(express.json());
+express.use(express.urlencoded({ extended: true }))
+app.use(cors( { origin: 'https://basicinfosite.netlify.app' }));
 app.use(express.static(path.join(__dirname, '../'))); 
 
 const transporter = nodemailer.createTransport({
