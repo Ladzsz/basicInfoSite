@@ -61,6 +61,10 @@ app.post('/contact-me', async (req, res) => {
   }
 });
 
+// 404 catch-all route
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, '404.html'));
+});
 
 
 // Start server
