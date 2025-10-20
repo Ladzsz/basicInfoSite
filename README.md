@@ -2,7 +2,6 @@ odins info site project allowing user to serve html pages in the address bar,
 
 
 dev note 
-thing i learned about backend workflow.
-- When connecting a Node project to Render, it’s already live remotely.
-- Local changes only affect the live server after redeploy.
-- Initially pushed small changes unnecessarily—good lesson in deployment workflow.
+- email sending logic has been abandoned as i decided to make app fully local as i have completed the serving html pages backend task.
+- and the email sending part was just extra i got it to work locally however could not get it to work remotely.
+
