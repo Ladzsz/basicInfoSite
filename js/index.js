@@ -7,23 +7,31 @@ import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // Fix for ES module __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Allow only Netlify origin (for Local usage use 'http://localhost:8080')
+const allowedOrigin = 'https://basicinfosite.netlify.app';
+
 // Middleware
+app.use(cors({
+  origin: allowedOrigin,
+  methods: ['GET','POST'],
+  allowedHeaders: ['Content-Type']
+}));
+
+app.options('*', cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
-app.use(cors( { origin: 'https://basicinfosite.netlify.app' }));
 app.use(express.static(path.join(__dirname, '../'))); 
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: 'SendGrid',
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS 
+    user: 'apikey', 
+    pass: process.env.SENDGRID_API_KEY
   }
 });
 
@@ -47,8 +55,8 @@ app.post('/contact-me', async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: process.env.GMAIL_USER,  
-      to: process.env.GMAIL_USER,    
+      from: 'noreply@basicinfosite.com',
+      to: process.env.GMAIL_USER,
       subject: `New contact from ${name}`,
       text: `From: ${name} <${email}>\n\n${message}`,
       replyTo: email
